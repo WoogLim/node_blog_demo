@@ -18,6 +18,13 @@ const Comments = require("../../schemas/comment.js")
 router.post("/write", async(req, res) => {
   const {postId, user, password, content} = req.body;
 
+  if(!content){
+    return res.status(400).json({
+      success: false
+      , errorMessage: '댓글 내용을 입력해주세요'
+    })
+  }
+
   // 검색된 댓글 결과 갯수 
   const commentStep = await Comments.find({postId, commentType: 1}).countDocuments()
 
@@ -54,7 +61,7 @@ router.get("/view/:postId", async(req, res) => {
       postId
       , commentStatus: { $ne: 3}
       , commentType: 1
-    }).sort({step: 1})
+    },{password: false}).sort({createAt: -1})
 
     // for await (variable of iterable) {
     //   statement
@@ -68,7 +75,7 @@ router.get("/view/:postId", async(req, res) => {
       let replyList = await Comments.find({
         postId: comment.postId
         , parentComment : comment._id.toString()
-        , commentType: 2}).sort({replyStep: 1});
+        , commentType: 2},{password: false}).sort({replyStep: 1});
   
       searchComments[index]._doc.replyList = replyList;
       
@@ -103,13 +110,19 @@ router.get("/view/:postId", async(req, res) => {
  * @return {json(object)} 성공여부 { success : true/false }
  */
 router.put("/write", async(req, res) => {
-  const {commentId, user, password, content} = req.body;
+  const {commentId, password, content} = req.body;
+
+  if(!content){
+    return res.status(400).json({
+      success: false
+      , errorMessage: '댓글 내용을 입력해주세요'
+    })
+  }
 
   try{
     // 삭제된 댓글 제외.
     const authUser = await Comments.findOne(
       { _id:commentId
-        , user
         , password
         , commentStatus: { $ne: 3}})
 
@@ -152,13 +165,12 @@ router.put("/write", async(req, res) => {
  * @return {json(object)} 성공여부 { success : true/false }
  */
 router.delete("/delete", async(req, res) => {
-  const {commentId, user, password} = req.body;
+  const {commentId, password} = req.body;
 
   try{
     // 삭제된 댓글 제외.
     const authUser = await Comments.findOne(
       { _id:commentId
-        , user
         , password
         , commentStatus: { $ne: 3}})
 
@@ -210,6 +222,13 @@ router.post("/reply/write", async(req, res) => {
   // replyStep -> auto increment
   const {postId, parentComment, user, password, step, content} = req.body;
 
+  if(!content){
+    return res.status(400).json({
+      success: false
+      , errorMessage: '답글 내용을 입력해주세요'
+    })
+  }
+
   // 검색된 답글 결과 갯수 
   // parentComment : 답글 대상 루트 ID
   // commentType [1] 댓글 [2] 답글
@@ -250,7 +269,14 @@ router.post("/reply/write", async(req, res) => {
  * @return {json(object)} 성공여부 { success : true/false }
  */
 router.put("/reply/write", async(req, res) => {
-  const {postId, parentComment, replyId, user, password, content} = req.body;
+  const {postId, parentComment, replyId, password, content} = req.body;
+
+  if(!content){
+    return res.status(400).json({
+      success: false
+      , errorMessage: '답글 내용을 입력해주세요'
+    })
+  }
 
   try{
     // 삭제된 댓글 제외.
@@ -258,7 +284,6 @@ router.put("/reply/write", async(req, res) => {
       { _id:replyId
         , postId
         , parentComment
-        , user
         , password
         , commentStatus: { $ne: 3}})
 
@@ -303,7 +328,7 @@ router.put("/reply/write", async(req, res) => {
  * @return {json(object)} 성공여부 { success : true/false }
  */
 router.delete("/reply/delete", async(req, res) => {
-  const {postId, parentComment, replyId, user, password} = req.body;
+  const {postId, parentComment, replyId, password} = req.body;
 
   try{
     // 삭제된 댓글 제외.
@@ -311,7 +336,6 @@ router.delete("/reply/delete", async(req, res) => {
       { _id:replyId
         , postId
         , parentComment
-        , user
         , password
         , commentStatus: { $ne: 3}})
 

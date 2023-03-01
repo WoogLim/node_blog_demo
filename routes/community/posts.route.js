@@ -51,10 +51,10 @@ router.get("/list", async(req, res) => {
         { title: { $regex: search, $options: "i" } },
         { content: { $regex: search, $options: "i" } },
       ]
-    }).sort({createAt: -1});
+    },{password: false}).sort({createAt: -1});
   }else{
     // 검색어 없음.
-    searchPost = await Posts.find({});
+    searchPost = await Posts.find({},{password: false}).sort({createAt: -1});
   }
 
   return res.status(200).json({
@@ -73,7 +73,7 @@ router.get("/list", async(req, res) => {
 router.get("/view/:postId", async(req, res) => {
   const {postId} = req.params;
 
-  const searchPost = await Posts.findOne({ _id: postId })
+  const searchPost = await Posts.findOne({ _id: postId },{password: false})
 
   return res.status(200).json({
     success: true,
@@ -93,11 +93,11 @@ router.get("/view/:postId", async(req, res) => {
  * @return {json(object)} 성공여부 { success : true/false }
  */
 router.put("/write", async(req, res) => {
-  const {postId, password, user, title, content} = req.body;
+  const {postId, password, title, content} = req.body;
 
   // 게시글 ID에 작성자, 비밀번호가 일치하는지 확인
   try{
-    const authUser = await Posts.findOne({_id:postId, user, password})
+    const authUser = await Posts.findOne({_id:postId, password})
 
     if(authUser){
       const filter = { _id: postId }
@@ -138,12 +138,12 @@ router.put("/write", async(req, res) => {
  * @return {json(object)} 성공여부 { success : true/false }
  */
 router.delete("/delete", async(req, res) => {
-  const {postId, password, user} = req.body;
+  const {postId, password} = req.body;
 
   // 게시글 ID에 작성자, 비밀번호가 일치하는지 확인
   try{
     // 이후 서비스단에서 이와 같은 비즈니스 로직 정리
-    const authUser = await Posts.findOne({_id:postId, user, password})
+    const authUser = await Posts.findOne({_id:postId, password})
 
     if(authUser){
       const filter = { _id: postId }
