@@ -10,8 +10,8 @@ connect();
 
 app.use(express.json())
 
+app.use(morgan('dev'));
 app.use("/community", communityRouter)
-app.use(morgan('dev', { stream: httpLogStream }));
 
 app.get('/', (req, res) => {
   res.send('api만 제공하는 서버입니다. 현재 경로에 /community 를 붙여 api를 사용해주세요.');
