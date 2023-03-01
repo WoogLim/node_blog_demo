@@ -63,6 +63,8 @@ router.get("/view/:postId", async(req, res) => {
   if(searchComments.length){
     searchComments.forEach( async (comment, index) => {
 
+      console.log(comment._id);
+
       let replyList = await Comments.find({
         postId: comment.postId
         , parentComment : comment._id.toString()
