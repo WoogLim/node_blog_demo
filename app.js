@@ -14,7 +14,7 @@ app.use(morgan('dev'));
 app.use("/community", communityRouter)
 
 app.get('/', (req, res) => {
-  res.send('api만 제공하는 서버입니다. 현재 경로에 /community 를 붙여 api를 사용해주세요.');
+  res.sendFile(__dirname + '/views/index.html');
 })
 
 app.listen(port, () => {

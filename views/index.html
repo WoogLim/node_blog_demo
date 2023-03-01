@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEMO API TEST SITE</title>
+</head>
+<style>
+  body{
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .content_wrap{
+    padding: 10px;
+    width: 100%;
+    max-width: 1248px;
+    min-width: 1024px;
+    margin: 0 auto;
+  }
+  ul{
+    padding: 0px;
+    border: 1px solid #333333;
+  }
+  ul > li{
+    padding: 0px;
+    margin: 0px;
+  }
+  ul > li > p{
+    display: block;
+    margin: 0px;
+    height: auto;
+    padding: 6px;
+    box-sizing: border-box;
+    border: 1px solid #bcbcbc;
+    word-break: break-all;
+  }
+  .li_header{
+    font-weight: bold;
+  }
+</style>
+<body>
+  <div class="content_wrap">
+    <h1>안녕하세요! Node.js를 활용해 만든 API를 테스트하는 서버입니다.</h1>
+    <h3>아래 API 명세서롤 참조하시면서 테스트를 진행해보세요. <a href="https://github.com/WoogLim/node_blog_demo" target="_blank">깃허브 리포지토리 보러가기</a></h3>
+    <h3><span style="color:orangered">POSTMAN</span> 을 설치하시면 더 간단하게 API를 사용해보실 수 있습니다. <a href="https://www.postman.com/downloads/" target="_blank">POSTMAN 설치 페이지</a></h3>
+    <ul style="list-style: none; display: flex; flex-direction:column;">
+      <li class="li_header" style="display:flex;">
+        <p style="width: 10%;">
+        기능
+        </p>
+        <p style="width: 20%;">
+        API URL
+        </p>
+        <p style="width: 10%;">
+        Method
+        </p>
+        <p style="width: 20%;">
+        Request(가져 갈 데이터)
+        </p>
+        <p style="width: 20%;">
+        Response(서버로부터 받아올 데이터)
+        </p>
+        <p style="width: 20%;">
+        Response(error)
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          게시글 작성
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/free/write
+        </p>
+        <p style="width: 10%;">
+          POST
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "user": "작성자ID",<br>
+            "password": "작성자PW",<br>
+            "title": "글 제목",<br>
+            "content": "글 내용"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          게시글 검색
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/free/list
+        </p>
+        <p style="width: 10%;">
+          GET
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/free/list?search="<span style="color:red">검색어</span>"<br><br>
+          <span style="color:red">"검색어"</span> 안에 검색 할 제목/내용 입력
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+            "posts": [글 정보(게시글 ID 포함)]<br>
+          }
+        </p>
+        <p style="width: 20%;">
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          게시글 상세 조회
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/free/view/:postId
+        </p>
+        <p style="width: 10%;">
+          GET
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/free/view/<span style="color:red">:postId</span><br><br>
+          <span style="color:red">"view/검색 할 게시글 ID"</span> 형식으로 요청
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true,<br>
+            "posts": [글 정보(게시글 ID 포함)]<br>
+          }
+        </p>
+        <p style="width: 20%;">
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          게시글 수정
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/free/write
+        </p>
+        <p style="width: 10%;">
+          PUT
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "postId": "게시글 ID(Object Id)",<br>
+            "password": "작성자 PW",<br>
+            "title": "글 제목",<br>
+            "content": "글 내용"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "해당 게시글에 권한이 없거나 비밀번호가 일치하지 않습니다."<br>
+          }
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          게시글 삭제
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/free/delete
+        </p>
+        <p style="width: 10%;">
+          DELETE
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "postId": "게시글 ID(Object Id)",<br>
+            "password": "작성자 PW"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "해당 게시글에 권한이 없거나 비밀번호가 일치하지 않습니다."<br>
+          }
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          댓글 작성
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/write
+        </p>
+        <p style="width: 10%;">
+          POST
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "postId": "게시글 ID(Object Id)",<br>
+            "user": "댓글 작성자 ID",<br>
+            "password": "댓글 작성자 PW",<br>
+            "content": "댓글 내용"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "댓글 내용을 입력해주세요"<br>
+          }
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          댓글 수정
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/write
+        </p>
+        <p style="width: 10%;">
+          PUT
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "commentId": "댓글 ID(Object Id)",<br>
+            "password": "댓글 작성자 PW",<br>
+            "content": "댓글 내용"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "댓글 내용을 입력해주세요"<br>
+          }
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          댓글 삭제
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/delete
+        </p>
+        <p style="width: 10%;">
+          DELETE
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "commentId": "댓글 ID(Object Id)",<br>
+            "password": "댓글 작성자 PW"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "해당 댓글에 권한이 없거나 비밀번호가 일치하지 않습니다. 또한 이미 삭제된 댓글일 가능성이 있습니다."<br>
+          }
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          댓글 조회(답글 포함)
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/view/:postId
+        </p>
+        <p style="width: 10%;">
+          GET
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/view/<span style="color:red">:postId</span><br><br>
+          <span style="color:red">"view/검색 할 게시글 ID"</span> 형식으로 요청
+        </p>
+        <p style="width: 20%;">
+          {<br>
+          &nbsp;"success": true,<br>
+          &nbsp;"searchComments": [<br>
+          &nbsp;&nbsp;&nbsp;{<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;댓글 정보(댓글 ID 포함)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;"replyList": [답글 리스트 정보(답글 ID 포함)]<br>
+          &nbsp;&nbsp;&nbsp;},<br>
+          &nbsp;]<br>
+          }
+        </p>
+        <p style="width: 20%;">
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          답글 작성
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/reply/write
+        </p>
+        <p style="width: 10%;">
+          POST
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "postId": "게시글 ID",<br>
+            "parentComment": "답글 작성할 댓글 ID",<br>
+            "user": "답글 작성자",<br>
+            "password": "답글 작성자 PW",<br>
+            "step": 답글 작성할 댓글 step,<br>
+            "content": "답글 내용"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "답글 내용을 입력해주세요"<br>
+          }
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          답글 수정
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/reply/write
+        </p>
+        <p style="width: 10%;">
+          PUT
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "postId": "게시글 ID",<br>
+            "parentComment": "답글 작성한 댓글 ID",<br>
+            "replyId": "답글 ID",<br>
+            "user": "답글 작성자",<br>
+            "password": "답글 작성자 PW",<br>
+            "content": "답글 내용"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "답글 내용을 입력해주세요"<br>
+          }
+        </p>
+      </li>
+
+      <li style="display:flex;">
+        <p style="width: 10%;">
+          답글 삭제
+        </p>
+        <p style="width: 20%;">
+          http://limportfolio.shop/community/comment/reply/delete
+        </p>
+        <p style="width: 10%;">
+          DELETE
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "postId": "63fd9f10deea0c8d1bbefc03",<br>
+            "parentComment": "63fdccab35d4df4673f7f217",<br>
+            "replyId": "63fdce4e583350c82b0595cc",<br>
+            "user": "임건",<br>
+            "password": "1234"<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": true<br>
+          }
+        </p>
+        <p style="width: 20%;">
+          {<br>
+            "success": false,<br>
+            "errorMessage": "해당 답글에 권한이 없거나 비밀번호가 일치하지 않습니다. 또한 이미 삭제된 답글일 가능성이 있습니다."<br>
+          }
+        </p>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
